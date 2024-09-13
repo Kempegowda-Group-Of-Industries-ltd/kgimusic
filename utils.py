@@ -1,6 +1,5 @@
 import cv2
 
-# Function to detect and crop face using OpenCV's Haarcascade model
 def crop_face(frame):
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -13,7 +12,6 @@ def crop_face(frame):
     cropped_face = gray_frame[y:y+h, x:x+w]
     return cropped_face
 
-# Recommend songs based on the detected emotion
 def get_recommendations(emotion_list):
     song_dict = {
         'Happy': ['Happy Song 1', 'Happy Song 2', 'Happy Song 3'],
