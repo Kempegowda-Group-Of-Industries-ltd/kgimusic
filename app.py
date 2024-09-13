@@ -14,6 +14,7 @@ emotion_to_song = {
     0: 'happy',    # Replace with actual emotion mappings
     1: 'sad',
     2: 'angry',
+    3: 'neutral',
     # Add other emotions
 }
 
