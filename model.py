@@ -8,7 +8,8 @@ mp_face_detection = mp.solutions.face_detection
 face_detection = mp_face_detection.FaceDetection(min_detection_confidence=0.2)
 
 # Load the trained emotion model
-MODEL_PATH = 'path_to_your_trained_model.h5'
+MODEL_PATH = 'emotion_model_sample.h5'
+
 model = tf.keras.models.load_model(MODEL_PATH)
 
 def detect_face(image):
