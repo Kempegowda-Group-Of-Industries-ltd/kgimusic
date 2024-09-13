@@ -18,4 +18,4 @@ spotipy
 face-recognition
 streamlit
 
-pip install --upgrade pip
+
