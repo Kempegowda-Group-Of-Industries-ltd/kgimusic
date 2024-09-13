@@ -1,22 +1,15 @@
 streamlit==1.38.0
 opencv-python
-numpy
 pillow
 tensorflow
-numpy
 Pillow
 spotipy
-
 face_recognition
 streamlit
-pillow
-
- 
 opencv-python
-pillow
 numpy
-spotipy
-face_recognition
+
+
 
 
 
