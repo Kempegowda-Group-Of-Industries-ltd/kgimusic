@@ -6,11 +6,17 @@ tensorflow
 numpy
 Pillow
 spotipy
-dlib==19.24.0
+dlib
 face_recognition
 streamlit
 pillow
 
+ 
+opencv-python
+pillow
+numpy
+spotipy
+face_recognition
 
 
 
