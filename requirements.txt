@@ -29,4 +29,4 @@ spotipy
 face_recognition
 
 
-pip install --upgrade pip
+--upgrade pip
