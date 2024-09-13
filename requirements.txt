@@ -6,7 +6,7 @@ tensorflow
 numpy
 Pillow
 spotipy
-dlib
+
 face_recognition
 streamlit
 pillow
