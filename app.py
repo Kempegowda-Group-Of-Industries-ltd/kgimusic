@@ -63,3 +63,34 @@ if run:
 
 else:
     st.write("Camera stopped.")
+
+
+
+st.markdown("""
+<style>
+    .stButton>button {
+        background-color: #FF6347;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+    .stButton>button:hover {
+        background-color: #FF4500;
+    }
+    .expander-content {
+        animation: slideDown 0.5s ease-out;
+    }
+    @keyframes slideDown {
+        from {
+            max-height: 0;
+            opacity: 0;
+        }
+        to {
+            max-height: 100%;
+            opacity: 1;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.expander("Click to see recommendations", expanded=True).write("Recommendations will appear here after detection.")
+
