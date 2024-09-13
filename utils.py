@@ -1,49 +1,31 @@
-from PIL import Image
-import face_recognition
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
-import numpy as np
+import cv2
 
-# Face Cropping Function
+# Function to detect and crop face using OpenCV's Haarcascade model
 def crop_face(frame):
-    # Convert the frame to a NumPy array
-    frame_array = np.array(frame)
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray_frame, 1.3, 5)
     
-    # Detect faces
-    face_locations = face_recognition.face_locations(frame_array)
-    
-    if len(face_locations) == 0:
+    if len(faces) == 0:
         return None
     
-    # Use the first detected face
-    top, right, bottom, left = face_locations[0]
-    cropped_face = frame.crop((left, top, right, bottom))
-    
+    (x, y, w, h) = faces[0]
+    cropped_face = gray_frame[y:y+h, x:x+w]
     return cropped_face
 
-# Spotify API setup
-client_credentials_manager = SpotifyClientCredentials(client_id='your_spotify_client_id', client_secret='your_spotify_client_secret')
-sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
-# Recommend Songs Based on Detected Emotions
+# Recommend songs based on the detected emotion
 def get_recommendations(emotion_list):
-    emotion_song_map = {
-        'Happy': 'happy',
-        'Sad': 'sad',
-        'Angry': 'angry',
-        'Surprise': 'surprise',
-        'Neutral': 'chill',
-        'Fear': 'calm',
-        'Disgust': 'energetic'
+    song_dict = {
+        'Happy': ['Happy Song 1', 'Happy Song 2', 'Happy Song 3'],
+        'Sad': ['Sad Song 1', 'Sad Song 2', 'Sad Song 3'],
+        'Angry': ['Angry Song 1', 'Angry Song 2', 'Angry Song 3'],
+        'Surprise': ['Surprise Song 1', 'Surprise Song 2', 'Surprise Song 3'],
+        'Neutral': ['Neutral Song 1', 'Neutral Song 2', 'Neutral Song 3'],
+        'Fear': ['Fear Song 1', 'Fear Song 2', 'Fear Song 3'],
+        'Disgust': ['Disgust Song 1', 'Disgust Song 2', 'Disgust Song 3']
     }
     
     recommendations = []
-    
     for emotion in emotion_list:
-        if emotion in emotion_song_map:
-            search_query = emotion_song_map[emotion] + " music"
-            results = sp.search(q=search_query, type='track', limit=5)
-            for track in results['tracks']['items']:
-                recommendations.append(track['name'] + ' by ' + track['artists'][0]['name'])
-
+        recommendations += song_dict.get(emotion, ['Default Song'])
     return recommendations
