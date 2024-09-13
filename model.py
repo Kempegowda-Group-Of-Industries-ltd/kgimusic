@@ -3,7 +3,8 @@ import numpy as np
 import cv2
 
 # Load the pre-trained emotion detection model
-model = tf.keras.models.load_model('emotion_detection_model.h5')
+model = tf.keras.models.load_model('models/emotion_model.h5')
+
 
 # List of emotions
 EMOTIONS = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
