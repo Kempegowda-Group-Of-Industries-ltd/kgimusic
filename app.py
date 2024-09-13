@@ -1,89 +1,45 @@
 import streamlit as st
 import cv2
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-import face_recognition
-import spotipy
+from model import predict_emotion
+from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
-import os
 
-# Load your pre-trained emotion recognition model
-MODEL_PATH = 'fer2013_model.h5'
-if not os.path.isfile(MODEL_PATH):
-    st.error("Model file not found.")
-else:
-    model = load_model(MODEL_PATH)
+# Setup Spotify client
+sp = Spotify(auth_manager=SpotifyClientCredentials(client_id='YOUR_SPOTIPY_CLIENT_ID',
+                                                   client_secret='YOUR_SPOTIPY_CLIENT_SECRET'))
 
-# Spotify API setup
-sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id='your_client_id',
-                                                           client_secret='your_client_secret'))
+# Define emotion-to-song mapping
+emotion_to_song = {
+    0: 'happy',    # Replace with actual emotion mappings
+    1: 'sad',
+    2: 'angry',
+    # Add other emotions
+}
 
 def get_recommendations(emotion):
-    # Define emotion to playlist mapping
-    playlists = {
-        'happy': '37i9dQZF1DWU2tF5wYF0b7',
-        'sad': '37i9dQZF1DWTk6J3Jc2V9b',
-        'angry': '37i9dQZF1DWU2BSc7nv0sb',
-        'surprised': '37i9dQZF1DWTbA7b4FZxKt'
-    }
-    playlist_id = playlists.get(emotion, '37i9dQZF1DWU2tF5wYF0b7')  # Default to happy playlist
-    results = sp.playlist_tracks(playlist_id)
-    tracks = [track['track']['name'] for track in results['items']]
-    return tracks
+    genre = emotion_to_song.get(emotion, 'happy')
+    results = sp.search(q=f'genre:{genre}', type='track', limit=5)
+    tracks = results['tracks']['items']
+    return [(track['name'], track['artists'][0]['name']) for track in tracks]
 
-def main():
-    st.title("Emotion-based Music Recommendation")
+st.title('Emotion-Based Music Recommendation')
 
-    # Start Camera button
-    if st.button("Start Camera"):
-        st.write("Starting camera...")
-        # OpenCV camera capture
-        cap = cv2.VideoCapture(0)
+uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 
-        stframe = st.empty()
+if uploaded_file is not None:
+    image = np.array(bytearray(uploaded_file.read()), dtype=np.uint8)
+    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    
+    emotion = predict_emotion(image)
+    
+    if emotion is not None:
+        st.image(image, channels="BGR")
+        st.write(f"Predicted emotion: {emotion_to_song.get(emotion, 'Unknown')}")
         
-        # Capture video from the camera
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                st.write("Failed to grab frame.")
-                break
-            
-            # Process the frame
-            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            face_locations = face_recognition.face_locations(rgb_frame)
-            for face_location in face_locations:
-                top, right, bottom, left = face_location
-                face_image = rgb_frame[top:bottom, left:right]
-                face_image_resized = cv2.resize(face_image, (48, 48))
-                face_image_array = np.array(face_image_resized) / 255.0
-                face_image_array = np.expand_dims(face_image_array, axis=0)
-                face_image_array = np.expand_dims(face_image_array, axis=-1)
-                
-                # Predict emotion
-                emotion_prediction = model.predict(face_image_array)
-                emotion = np.argmax(emotion_prediction)
-                
-                # Map emotion index to emotion label
-                emotions = ['happy', 'sad', 'angry', 'surprised']
-                detected_emotion = emotions[emotion]
-                
-                # Display detected emotion
-                st.write(f"Detected Emotion: {detected_emotion}")
-                
-                # Get recommendations based on emotion
-                recommendations = get_recommendations(detected_emotion)
-                st.write(f"Recommendations for {detected_emotion}:")
-                st.write(recommendations)
-                
-            stframe.image(frame, channels='BGR', use_column_width=True)
-            
-            # Stop camera if user presses stop button
-            if st.button('Stop Camera'):
-                cap.release()
-                st.write("Camera stopped.")
-                break
-
-if __name__ == "__main__":
-    main()
+        recommendations = get_recommendations(emotion)
+        st.write("Recommended songs:")
+        for track in recommendations:
+            st.write(f"{track[0]} by {track[1]}")
+    else:
+        st.write("No face detected or unable to predict emotion.")
