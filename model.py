@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 
 # Load pre-trained FER2013 model (make sure to have 'fer2013_model.h5' in the same directory)
-model = tf.keras.models.load_model('fer2013_model.h5')
+model = tf.keras.models.load_model('fer.h5')
 
 # Emotion labels from FER2013
 EMOTIONS = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
