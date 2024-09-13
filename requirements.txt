@@ -20,5 +20,13 @@ streamlit==1.38.0
 tensorflow==2.12.0
 dlib==19.24.0
 face_recognition
+streamlit==1.38.0
+tensorflow==2.17.0
+opencv-python
+pillow
+numpy
+spotipy
+face_recognition
 
 
+pip install --upgrade pip
