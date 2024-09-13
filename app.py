@@ -9,7 +9,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import os
 
 # Load your pre-trained emotion recognition model
-MODEL_PATH = 'path_to_your_trained_model.h5'
+MODEL_PATH = 'fer2013_model.h5'
 if not os.path.isfile(MODEL_PATH):
     st.error("Model file not found.")
 else:
