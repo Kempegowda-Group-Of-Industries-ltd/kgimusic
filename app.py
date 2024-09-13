@@ -5,15 +5,10 @@ from PIL import Image
 from model import predict_emotion
 from utils import crop_face, get_recommendations
 
-# Streamlit app title
 st.title("Emotion-Based Music Recommendation System")
-
-# Start the camera or upload an image
-st.subheader("Choose an input method:")
 
 input_method = st.radio("Select input method", ("Use Webcam", "Upload Image"))
 
-# Handling Webcam Input
 if input_method == "Use Webcam":
     run = st.checkbox('Start Camera')
     if run:
@@ -32,7 +27,6 @@ if input_method == "Use Webcam":
                 recommendations = get_recommendations([emotion])
                 st.expander("Click to see recommendations").write(recommendations)
 else:
-    # Handling Image Upload
     uploaded_file = st.file_uploader("Choose an image...", type="jpg")
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
@@ -48,7 +42,6 @@ else:
             recommendations = get_recommendations([emotion])
             st.expander("Click to see recommendations").write(recommendations)
 
-# CSS Styling for UI enhancement
 st.markdown("""
     <style>
     .stButton>button {
