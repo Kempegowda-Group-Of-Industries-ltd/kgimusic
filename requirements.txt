@@ -1,5 +1,11 @@
 streamlit==1.38.0
-tensorflow==2.12.0
+tensorflow==2.17.0  # Use a version that is compatible with your Python version
+opencv-python
+pillow
+numpy
+
+streamlit==1.38.0
+
 opencv-python
 pillow
 numpy
@@ -11,3 +17,5 @@ Pillow
 spotipy
 face-recognition
 streamlit
+
+pip install --upgrade pip
