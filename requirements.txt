@@ -17,5 +17,6 @@ Pillow
 spotipy
 face-recognition
 streamlit
-
+dlib==19.24.0
+dlib==19.22.1
 
